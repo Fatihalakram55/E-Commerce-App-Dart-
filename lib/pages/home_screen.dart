@@ -11,7 +11,61 @@ import 'detail_product_screen.dart';
 // =========================
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  // Data kategori
+  final List<Category> categories = [
+    Category(name: 'Elektronik', image: 'https://picsum.photos/100?random=1'),
+    Category(name: 'Fashion', image: 'https://picsum.photos/100?random=2'),
+    Category(name: 'Makanan', image: 'https://picsum.photos/100?random=3'),
+    Category(name: 'Olahraga', image: 'https://picsum.photos/100?random=4'),
+    Category(name: 'Buku', image: 'https://picsum.photos/100?random=5'),
+    Category(name: 'Gaming', image: 'https://picsum.photos/100?random=6'),
+  ];
+
+  // Data produk
+  final List<Product> products = [
+    Product(
+      name: 'Wireless Headphone',
+      image: 'https://picsum.photos/300/300?random=10',
+      price: 250000,
+    ),
+    Product(
+      name: 'Smart Watch',
+      image: 'https://picsum.photos/300/300?random=11',
+      price: 450000,
+    ),
+    Product(
+      name: 'Running Shoes',
+      image: 'https://picsum.photos/300/300?random=12',
+      price: 350000,
+    ),
+    Product(
+      name: 'Backpack',
+      image: 'https://picsum.photos/300/300?random=13',
+      price: 180000,
+    ),
+    Product(
+      name: 'Mechanical Keyboard',
+      image: 'https://picsum.photos/300/300?random=14',
+      price: 650000,
+    ),
+    Product(
+      name: 'Gaming Mouse',
+      image: 'https://picsum.photos/300/300?random=15',
+      price: 300000,
+    ),
+    Product(
+      name: 'T-Shirt',
+      image: 'https://picsum.photos/300/300?random=16',
+      price: 120000,
+    ),
+    Product(
+      name: 'Coffee Maker',
+      image: 'https://picsum.photos/300/300?random=17',
+      price: 550000,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {

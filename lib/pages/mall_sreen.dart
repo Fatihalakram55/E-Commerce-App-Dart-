@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mysample/widgets/my_app_bar.dart';
+<<<<<<< HEAD
 import 'package:mysample/data/models/model_mall.dart';
 import 'package:mysample/data/dummy/dummy_mall.dart';
+=======
+>>>>>>> e04f6861d96022670de8c0ccaccb49fdc73f0593
 
 class MallScreen extends StatelessWidget {
   const MallScreen({super.key});
@@ -10,6 +13,7 @@ class MallScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(),
+<<<<<<< HEAD
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
@@ -26,6 +30,9 @@ class MallScreen extends StatelessWidget {
           },
         ),
       ),
+=======
+      body: Center(child: Text('Mall')),
+>>>>>>> e04f6861d96022670de8c0ccaccb49fdc73f0593
     );
   }
 }
