@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mysample/widgets/my_app_bar.dart';
-<<<<<<< HEAD
-import 'package:mysample/data/models/model_mall.dart';
-import 'package:mysample/data/dummy/dummy_mall.dart';
-=======
->>>>>>> e04f6861d96022670de8c0ccaccb49fdc73f0593
 
 class MallScreen extends StatelessWidget {
   const MallScreen({super.key});
