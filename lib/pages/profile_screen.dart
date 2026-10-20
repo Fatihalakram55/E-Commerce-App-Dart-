@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'login_screen.dart';   // ⬅️ untuk navigasi logout
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -15,6 +17,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profil'),
@@ -30,8 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 CircleAvatar(
                   radius: 60,
-                  backgroundColor: Colors.grey[300],
-                  child: const Icon(Icons.person, size: 60, color: Colors.grey),
+                  backgroundColor: cs.primaryContainer,
+                  child: Icon(
+                    Icons.person,
+                    size: 60,
+                    color: cs.onPrimaryContainer,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -44,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 4),
                 Text(
                   email,
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(fontSize: 16, color: cs.onSurfaceVariant),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -56,7 +64,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Tombol Edit Profile
                 ElevatedButton.icon(
                   onPressed: () {
-                    // Arahkan ke halaman edit profil (belum diimplementasikan)
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Fitur edit profil')),
                     );
@@ -65,28 +72,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   label: const Text('Edit Profil'),
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 48),
+                    elevation: 0,
+                    backgroundColor: cs.primary,
+                    foregroundColor: cs.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           const Divider(height: 40),
-          // Menu-menu pengaturan
           _buildMenuItem(
+            context,
             icon: Icons.settings,
             title: 'Pengaturan',
-            onTap: () {
-              // Arahkan ke halaman pengaturan
-            },
+            onTap: () {},
           ),
           _buildMenuItem(
+            context,
             icon: Icons.help,
             title: 'Bantuan & Dukungan',
-            onTap: () {
-              // Arahkan ke halaman bantuan
-            },
+            onTap: () {},
           ),
           _buildMenuItem(
+            context,
             icon: Icons.logout,
             title: 'Keluar',
             onTap: _showLogoutDialog,
@@ -97,18 +108,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Widget untuk menu item
-  Widget _buildMenuItem({
+  Widget _buildMenuItem(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
     bool isDestructive = false,
   }) {
+    final cs = Theme.of(context).colorScheme;
     return ListTile(
-      leading: Icon(icon, color: isDestructive ? Colors.red : null),
+      leading: Icon(icon, color: isDestructive ? cs.error : null),
       title: Text(
         title,
-        style: TextStyle(color: isDestructive ? Colors.red : null),
+        style: TextStyle(color: isDestructive ? cs.error : null),
       ),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: onTap,
@@ -119,24 +131,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showLogoutDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Keluar'),
         content: const Text('Apakah Anda yakin ingin keluar?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('Batal'),
           ),
           TextButton(
             onPressed: () {
-              // Logika logout (misal hapus session, navigasi ke login)
-              Navigator.pop(context);
-              // Navigator.pushReplacementNamed(context, '/login');
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Logout berhasil')));
+              // 1) Tutup dialog dulu
+              Navigator.of(dialogContext).pop();
+
+              // 2) Baru hapus semua route & pindah ke LoginScreen
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
             },
-            child: const Text('Keluar', style: TextStyle(color: Colors.red)),
+            child: Text(
+              'Keluar',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
           ),
         ],
       ),
