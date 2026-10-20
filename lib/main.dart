@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'data/dummy/dummy_cart.dart';
+import 'pages/cart_page.dart';
 import 'pages/feeds_screen.dart';
 import 'pages/home_screen.dart';
 import 'pages/login_screen.dart';
@@ -68,6 +70,10 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   bool _showNavigationBar = true;
 
+  // Jumlah seluruh produk di keranjang (untuk badge)
+  int get _totalItemKeranjang =>
+      cartItems.fold(0, (sum, item) => sum + item.jumlah);
+
   void _handleScroll(ScrollNotification notification) {
     if (notification is! UserScrollNotification) return;
 
@@ -88,6 +94,14 @@ class _NavigationExampleState extends State<NavigationExample> {
     setState(() => currentPageIndex = index);
   }
 
+  // Buka halaman keranjang
+  void _bukaKeranjang() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CartPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,6 +113,38 @@ class _NavigationExampleState extends State<NavigationExample> {
         child: Stack(
           children: [
             _pages[currentPageIndex],
+
+            // Tombol keranjang (di atas navbar, ikut animasi sembunyi)
+            Positioned(
+              right: 20,
+              bottom: 104,
+              child: AnimatedSlide(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                offset:
+                    _showNavigationBar ? Offset.zero : const Offset(0, 3),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  opacity: _showNavigationBar ? 1.0 : 0.0,
+                  child: FloatingActionButton(
+                    heroTag: 'fab_keranjang',
+                    onPressed: _bukaKeranjang,
+                    // badge otomatis update saat isi keranjang berubah
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: cartVersion,
+                      builder: (context, _, __) => Badge(
+                        isLabelVisible: _totalItemKeranjang > 0,
+                        label: Text('$_totalItemKeranjang'),
+                        child: const Icon(Icons.shopping_cart_outlined),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Navbar melayang
             Positioned(
               left: 16,
               right: 16,

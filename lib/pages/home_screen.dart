@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../data/dummy/dummy_cart.dart';
 import '../data/dummy/dummy_kategori.dart';
 import '../data/dummy/dummy_produk.dart';
 import '../data/models/model_produk.dart';
 import '../widgets/my_app_bar.dart';
+import 'cart_page.dart';
 import 'detail_product_screen.dart';
 
 // =========================
@@ -154,6 +156,35 @@ class HomeScreen extends StatelessWidget {
   }
 
   // =========================
+  // TAMBAH KE KERANJANG
+  // menambah produk, lalu tampilkan SnackBar dengan tombol "Lihat"
+  // yang membuka CartPage lewat Navigator.push
+  // =========================
+  void _tambahKeranjang(BuildContext context, Product product) {
+    tambahKeKeranjang(product);
+
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text('${product.name} ditambahkan ke keranjang'),
+        behavior: SnackBarBehavior.floating,
+        // margin bawah agar tidak tertutup navbar melayang
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+        action: SnackBarAction(
+          label: 'Lihat',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CartPage()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // =========================
   // ITEM VIEW
   // memiliki parameter product untuk menampung produk
   // =========================
@@ -173,24 +204,6 @@ class HomeScreen extends StatelessWidget {
               builder: (context) => DetailProductScreen(product: product),
             ),
           );
-          // ketika di klik
-          // showDialog(
-          //   context: context,
-          //   builder: (context) {
-          //     return AlertDialog(
-          //       title: Text(product.name),
-          //       content: Text(product.name),
-          //       actions: [
-          //         TextButton(
-          //           child: Text('Close'),
-          //           onPressed: () {
-          //             Navigator.pop(context);
-          //           },
-          //         ),
-          //       ],
-          //     );
-          //   },
-          // );
         },
 
         child: Column(
@@ -207,7 +220,7 @@ class HomeScreen extends StatelessWidget {
 
             // Informasi produk
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 4, 6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -223,15 +236,29 @@ class HomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-                  Text(
-                    'Rp ${product.price}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                  // Harga + tombol tambah ke keranjang
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          formatRupiah(product.price.toInt()),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        tooltip: 'Tambah ke keranjang',
+                        icon: Icon(
+                          Icons.add_shopping_cart,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        onPressed: () => _tambahKeranjang(context, product),
+                      ),
+                    ],
                   ),
-
-                  const SizedBox(height: 6),
 
                   const Row(
                     children: [
